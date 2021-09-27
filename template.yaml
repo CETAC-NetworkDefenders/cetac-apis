@@ -1,0 +1,139 @@
+# Aside from the resources defined here, the following resources must be configured on the
+# Management Console:
+# - DB: Create the db using Postgres in the backend, and then the tables using the ddl file.
+# - Secret with credentials: Create a secret to store the DB credentials. Remember to create a VPC
+#   endpoint for the Secrets Manager Service, and add it to the default VPC, default subnets, and
+#   default security group.
+# - LambdaExecutionRole: Attach the following policies: AWSLambdaExecute,
+#   AWSLambdaVPCAccessExecutionRole, and then add Secrets Manager List and Read capabilities.
+# Finally, modify the parameters to store the updated values of the secret, endpoint, security
+# and subnet ids.
+
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  cetac-apis
+  This stack contains all the necessary APIs for the CETAC Mobile App of the team Network
+  Defenders.
+
+Parameters:
+  CetacDBName:
+    Type: String
+    Description: 'Name of the DB used for CETAC APIs'
+    Default: cetac_db
+  CetacDBCredentialsSecretName:
+    Type: String
+    Description: 'Secret that contains the credentials for DB Access.'
+    Default: lambda_db_credentials
+  CetacDBCredentialsSecretRegion:
+    Type: String
+    Description: 'Region in which the DB credentials secret is stored'
+    Default: us-west-2
+  LambdaExecutionRole:
+    Type: String
+    Description: 'Execution Role ARN to be used by Lambdas'
+    Default: arn:aws:iam::065356993124:role/LambdaExecutionRole
+
+Globals:
+  Function:
+    Runtime: python3.7
+    Timeout: 30
+    MemorySize: 256
+    Handler: app.lambda_handler
+    VpcConfig:
+      SubnetIds:
+        - subnet-a53b4bf8
+        - subnet-18b1d760
+      SecurityGroupIds:
+        - sg-2a837121
+    Environment:
+      Variables:
+        DB_NAME: !Ref CetacDBName
+        DB_SECRET_NAME: !Ref CetacDBCredentialsSecretName
+        DB_SECRET_REGION: !Ref CetacDBCredentialsSecretRegion
+
+Resources:
+  CetacApi:
+    Type:  AWS::Serverless::Api
+    Properties:
+      Name: Cetac APIs
+      StageName: default
+      Auth:
+        ApiKeyRequired: false
+
+  DBAccessLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: db-access-layer
+      Description: Layer that abstracts the DB Access.
+      ContentUri: db_access_layer
+      CompatibleRuntimes:
+        - python3.7
+
+  ThanatologistFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-ThanatologistAPI'
+      CodeUri: thanatologist/
+      Layers:
+        - !Ref DBAccessLayer
+      Role: !Ref LambdaExecutionRole
+      Events:
+        RetrieveThanatologist:
+          Type: Api
+          Properties:
+            Path: /thanatologist
+            Method: get
+            RestApiId: !Ref CetacApi
+        CreateThanatologist:
+          Type: Api
+          Properties:
+            Path: /thanatologist
+            Method: post
+            RestApiId: !Ref CetacApi
+        DeleteThanatologist:
+          Type: Api
+          Properties:
+            Path: /thanatologist
+            Method: delete
+            RestApiId: !Ref CetacApi
+        UpdateThanatologist:
+          Type: Api
+          Properties:
+            Path: /thanatologist
+            Method: patch
+            RestApiId: !Ref CetacApi
+
+  UserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-UserAPI'
+      CodeUri: user/
+      Layers:
+        - !Ref DBAccessLayer
+      Role: !Ref LambdaExecutionRole
+      Events:
+        RetrieveUser:
+          Type: Api
+          Properties:
+            Path: /user
+            Method: get
+            RestApiId: !Ref CetacApi
+        CreateUser:
+          Type: Api
+          Properties:
+            Path: /user
+            Method: post
+            RestApiId: !Ref CetacApi
+        DeleteUser:
+          Type: Api
+          Properties:
+            Path: /user
+            Method: delete
+            RestApiId: !Ref CetacApi
+        UpdateUser:
+          Type: Api
+          Properties:
+            Path: /user
+            Method: patch
+            RestApiId: !Ref CetacApi
