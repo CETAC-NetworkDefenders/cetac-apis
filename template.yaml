@@ -137,3 +137,59 @@ Resources:
             Path: /user
             Method: patch
             RestApiId: !Ref CetacApi
+
+  SessionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-SessionAPI'
+      CodeUri: session/
+      Layers:
+        - !Ref DBAccessLayer
+      Role: !Ref LambdaExecutionRole
+      Events:
+        RetrieveSession:
+          Type: Api
+          Properties:
+            Path: /session
+            Method: get
+            RestApiId: !Ref CetacApi
+        CreateSession:
+          Type: Api
+          Properties:
+            Path: /session
+            Method: post
+            RestApiId: !Ref CetacApi
+
+  AdminFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-AdminAPI'
+      CodeUri: admin/
+      Layers:
+        - !Ref DBAccessLayer
+      Role: !Ref LambdaExecutionRole
+      Events:
+        RetrieveAdmin:
+          Type: Api
+          Properties:
+            Path: /admin
+            Method: get
+            RestApiId: !Ref CetacApi
+        CreateAdmin:
+          Type: Api
+          Properties:
+            Path: /admin
+            Method: post
+            RestApiId: !Ref CetacApi
+        DeleteAdmin:
+          Type: Api
+          Properties:
+            Path: /admin
+            Method: delete
+            RestApiId: !Ref CetacApi
+        UpdateAdmin:
+          Type: Api
+          Properties:
+            Path: /admin
+            Method: update
+            RestApiId: !Ref CetacApi

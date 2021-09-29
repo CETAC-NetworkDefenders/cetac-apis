@@ -69,7 +69,7 @@ class DBConnection:
 
 		return conn
 
-	def execute_query(self, query: str, params: dict = None) -> dict:
+	def execute_query(self, query: str, params: dict = None) -> (dict, int):
 		"""
 		Executes a query. If the query is a SELECT statement, it returns all the result rows in
 		the form of a list of dictionaries. Otherwise, it only returns the status code indicating if
@@ -77,36 +77,30 @@ class DBConnection:
 		:return: A dictionary with the statusCode of the query in every case. If the query was a
 		SELECT statement, return also the queryResponse as a list of dictionaries.
 		"""
+		query_response = None
+
 		if not self.conn:
 			self.conn = self.create_db_connection()
 
 		is_select_statement = query.strip().startswith("SELECT")
+		query_cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-		if not is_select_statement and not params:
-			query_response = {
-				'statusCode': HTTPStatus.BAD_REQUEST,
-				'message': "Should use query parameters when performing queries with side effects."
-			}
+		try:
+			query_cursor.execute(query=query, vars=params)
+
+		except (psycopg2.OperationalError, psycopg2.DatabaseError) as exc:
+			logging.error(f"Error while executing the query. Query: {query}. Error: {str(exc)}")
+			query_status_code = HTTPStatus.INTERNAL_SERVER_ERROR
 
 		else:
-			query_cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+			query_status_code = HTTPStatus.OK
 
-			try:
-				query_cursor.execute(query=query, vars=params)
-
-			except (psycopg2.OperationalError, psycopg2.DatabaseError) as exc:
-				logging.error(f"Error while executing the query. Query: {query}. Error: {str(exc)}")
-				query_response = {'statusCode': HTTPStatus.INTERNAL_SERVER_ERROR}
+			if is_select_statement:
+				query_response = query_cursor.fetchall()
 
 			else:
-				query_response = {'statusCode': HTTPStatus.OK}
+				query_cursor.commit()
 
-				if is_select_statement:
-					query_response['queryResult'] = query_cursor.fetchall()
+			query_cursor.close()
 
-				else:
-					query_cursor.commit()
-
-				query_cursor.close()
-
-		return query_response
+		return query_response, query_status_code
