@@ -102,7 +102,7 @@ def get_thanatologist(params: dict):
 
 def post_thanatologist(params: dict):
     response = {
-        'message': "Missing query parameters"
+        'message': "Sample change for Github Repo"
     }
     status = HTTPStatus.BAD_REQUEST
 
