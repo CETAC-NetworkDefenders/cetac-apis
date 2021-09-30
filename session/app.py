@@ -11,7 +11,7 @@ def lambda_handler(event, _):
     response,status = None,None
 
     method = event.get("httpMethod")
-    params = event.get("queryStringParameters")
+    params = event.get("queryParameters")
     body = event.get("body")
 
     if method == "GET" and params:
@@ -19,7 +19,7 @@ def lambda_handler(event, _):
     elif body:
         logging.error(f"Missing body for {method} request")
 
-        if mehod == "POST":
+        if method == "POST":
             response,status = post_session(body)
     else:
         response = {
@@ -37,47 +37,50 @@ def get_session(params: dict):
         db_conn = DBConnection()
         query = """
             SELECT 
-                session_date,
-                session_number,
-                motive,
-                intervention_type,
-                tool,
-                record_id,
-                recovery_fee
-                FROM
-                    cetac_session
-                WHERE
-                    id = %(session_id)s
+            tool,
+            intervention_type,
+            session_number,
+            evaluation,
+            session_date,
+            motive,
+            recovery_fee,
+            record_id
+            
+                
+            FROM
+            cetac_session
+            WHERE
+            id = %(session_id)s
                     """
         params = {
             'session_id': params['sessionId'],
         }
 
-    query_response = db_conn.execute_query(query, params)
+        query_response = db_conn.execute_query(query, params)
     
-    if query_status_code == HTTPStatus.OK:
+        if query_status_code == HTTPStatus.OK:
             if query_response:
                 response = {
                     'sessionData': query_response[0]
-                }
+                    }
                 status = HTTPStatus.OK
 
             else:
                 response = {
                     'message': "The session is not register on the DB."
-                }
+                    }
                 status = HTTPStatus.NOT_FOUND
 
         else:
             response = {
                 'message': "Error while obtaining the data"
-            }
+                 }
             status = HTTPStatus.INTERNAL_SERVER_ERROR
 
     else:
         response = {
             'message': "Missing query parameters"
-        }
+            }
         status = HTTPStatus.BAD_REQUEST
         logging.error(params)
 
