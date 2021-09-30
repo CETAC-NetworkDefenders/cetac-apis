@@ -11,7 +11,7 @@ def lambda_handler(event, _):
     response,status = None,None
 
     method = event.get("httpMethod")
-    params = event.get("queryParameters")
+    params = event.get("queryStringParameters")
     body = event.get("body")
 
     if method == "GET" and params:
@@ -44,19 +44,17 @@ def get_session(params: dict):
             session_date,
             motive,
             recovery_fee,
-            record_id
-            
-                
+            record_id   
             FROM
             cetac_session
             WHERE
             id = %(session_id)s
-                    """
+        """
         params = {
             'session_id': params['sessionId'],
         }
 
-        query_response = db_conn.execute_query(query, params)
+        query_response, query_status_code = db_conn.execute_query(query, params)
     
         if query_status_code == HTTPStatus.OK:
             if query_response:
