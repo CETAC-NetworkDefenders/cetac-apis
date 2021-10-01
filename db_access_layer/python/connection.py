@@ -99,7 +99,7 @@ class DBConnection:
 				query_response = query_cursor.fetchall()
 
 			else:
-				query_cursor.commit()
+				self.conn.commit()
 
 			query_cursor.close()
 
