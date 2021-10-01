@@ -27,6 +27,7 @@ Serverless DB that runs with Postgres.
 
 The following diagram summarizes the interaction between the different services: 
 
+![image](https://drive.google.com/uc?export=view&id=1LH7GPSSkQe7Rxc1NiKI2udxlLSBuYWud)
 
 The Serverless Application Model (SAM) was used for the definition of the AWS resources. All the 
 Lambdas and the API Gateway is defined in the `template.yaml` file. However, there are three 
@@ -49,6 +50,7 @@ The template parameters must be updated when any of these resources is replaced.
 The DB is SQL and normalized for faster operations and reduced storage space. The following 
 diagram can be used as a reference: 
 
+![image](https://drive.google.com/uc?export=view&id=1VFndloMM5CZigqAHsiWsIse9BP_dfr2O)
 
 ## API Reference
 
