@@ -29,7 +29,6 @@ The following diagram summarizes the interaction between the different services:
 
 ![image](https://drive.google.com/uc?export=view&id=1LH7GPSSkQe7Rxc1NiKI2udxlLSBuYWud)
 
-
 The Serverless Application Model (SAM) was used for the definition of the AWS resources. All the 
 Lambdas and the API Gateway is defined in the `template.yaml` file. However, there are three 
 resources that should be created directly from the management console: 
