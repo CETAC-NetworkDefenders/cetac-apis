@@ -1,14 +1,3 @@
-# Aside from the resources defined here, the following resources must be configured on the
-# Management Console:
-# - DB: Create the db using Postgres in the backend, and then the tables using the ddl file.
-# - Secret with credentials: Create a secret to store the DB credentials. Remember to create a VPC
-#   endpoint for the Secrets Manager Service, and add it to the default VPC, default subnets, and
-#   default security group.
-# - LambdaExecutionRole: Attach the following policies: AWSLambdaExecute,
-#   AWSLambdaVPCAccessExecutionRole, and then add Secrets Manager List and Read capabilities.
-# Finally, modify the parameters to store the updated values of the secret, endpoint, security
-# and subnet ids.
-
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
@@ -70,11 +59,11 @@ Resources:
       CompatibleRuntimes:
         - python3.7
 
-  ThanatologistFunction:
+  StaffFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub '${AWS::StackName}-ThanatologistAPI'
-      CodeUri: thanatologist/
+      FunctionName: !Sub '${AWS::StackName}-StaffAPI'
+      CodeUri: staff/
       Layers:
         - !Ref DBAccessLayer
       Role: !Ref LambdaExecutionRole
@@ -82,25 +71,25 @@ Resources:
         RetrieveThanatologist:
           Type: Api
           Properties:
-            Path: /thanatologist
+            Path: /staff
             Method: get
             RestApiId: !Ref CetacApi
         CreateThanatologist:
           Type: Api
           Properties:
-            Path: /thanatologist
+            Path: /staff
             Method: post
             RestApiId: !Ref CetacApi
         DeleteThanatologist:
           Type: Api
           Properties:
-            Path: /thanatologist
+            Path: /staff
             Method: delete
             RestApiId: !Ref CetacApi
         UpdateThanatologist:
           Type: Api
           Properties:
-            Path: /thanatologist
+            Path: /staff
             Method: patch
             RestApiId: !Ref CetacApi
 
@@ -158,38 +147,4 @@ Resources:
           Properties:
             Path: /session
             Method: post
-            RestApiId: !Ref CetacApi
-
-  AdminFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub '${AWS::StackName}-AdminAPI'
-      CodeUri: admin/
-      Layers:
-        - !Ref DBAccessLayer
-      Role: !Ref LambdaExecutionRole
-      Events:
-        RetrieveAdmin:
-          Type: Api
-          Properties:
-            Path: /admin
-            Method: get
-            RestApiId: !Ref CetacApi
-        CreateAdmin:
-          Type: Api
-          Properties:
-            Path: /admin
-            Method: post
-            RestApiId: !Ref CetacApi
-        DeleteAdmin:
-          Type: Api
-          Properties:
-            Path: /admin
-            Method: delete
-            RestApiId: !Ref CetacApi
-        UpdateAdmin:
-          Type: Api
-          Properties:
-            Path: /admin
-            Method: update
             RestApiId: !Ref CetacApi
