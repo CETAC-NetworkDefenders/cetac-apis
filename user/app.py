@@ -2,9 +2,12 @@ import json
 import logging
 from http import HTTPStatus
 
+import cerberus
+
+import user_schemas
 from connection import DBConnection
 from encoder import DateTimeEncoder
-
+from user_queries import UserQueries
 
 def lambda_handler(event, _):
     logging.warning(f"Event successfully received: {event}")
@@ -19,12 +22,10 @@ def lambda_handler(event, _):
 
     elif body:
         logging.error(f"Missing body for {method} request")
+        body = json.loads(body)
 
         if method == "POST":
             response, status = post_user(body)
-
-        elif method == "DELETE":
-            response, status = delete_user(body)
 
         elif method == "PATCH":
             response, status = patch_user(body)
@@ -49,25 +50,17 @@ def get_user(params: dict):
     :param params: Dictionary of query parameters.
     :return: The API response and status code.
     """
-    required_params = ["userId"]
+    validator = cerberus.Validator(user_schemas.GET_USER_SCHEMA)
 
-    if list(params.keys()) == required_params:
+    if validator.validate(params):
         db_conn = DBConnection()
-
-        query = """
-            SELECT     
-                *
-            FROM 
-                cetac_user
-            WHERE 
-                id = %(user_id)s
-        """
-
-        params = {
+        query_params = {
             'user_id': params['userId'],
         }
 
-        query_response, query_status_code = db_conn.execute_query(query, params)
+        query_response, query_status_code = db_conn.execute_query(
+            query = UserQueries.get_user.value,
+            params = query_params)
 
         if query_status_code == HTTPStatus.OK:
             if query_response:
@@ -90,7 +83,8 @@ def get_user(params: dict):
 
     else:
         response = {
-            'message': "Missing query parameters"
+            'message': "There was an error with the request",
+            'error': validator.errors
         }
         status = HTTPStatus.BAD_REQUEST
         logging.error(params)
@@ -98,30 +92,78 @@ def get_user(params: dict):
     return response, status
 
 
-def post_user(params: dict):
-    response = {
-        'message': "Missing query parameters"
-    }
-    status = HTTPStatus.BAD_REQUEST
+def post_user(body: dict):
+    """
+    Add a new user to the DB
+    :param body
+    :return:
+    """
+    validator = cerberus.Validator(user_schemas.POST_USER_SCHEMA)
 
-    
+    if validator.validate(body):
+        db_conn = DBConnection()
+
+        _, query_status_code = db_conn.execute_query(
+            query=UserQueries.create_user.value,
+            params=body
+        )
+
+        if query_status_code == HTTPStatus.OK:
+            response = {
+                'message': "Successfully added the user"
+            }
+            status = HTTPStatus.OK
+
+        else:
+            response = {
+                'message': "Error while inserting the user"
+            }
+            status = HTTPStatus.INTERNAL_SERVER_ERROR
+
+    else:
+        response = {
+            'message': "There was an error with the request",
+            'error': validator.errors
+        }
+        status = HTTPStatus.BAD_REQUEST
 
     return response, status
 
 
-def delete_user(params: dict):
-    response = {
-        'message': "Missing query parameters"
-    }
-    status = HTTPStatus.BAD_REQUEST
+def patch_user(body: dict):
+    """
+    Add a new user to the DB
+    :param body
+    :return:
+    """
+    validator = cerberus.Validator(user_schemas.PATCH_USER_SCHEMA)
+
+    if validator.validate(body):
+        db_conn = DBConnection()
+
+        _, query_status_code = db_conn.execute_query(
+            query=UserQueries.update_user.value,
+            params=body
+        )
+
+        if query_status_code == HTTPStatus.OK:
+            response = {
+                'message': "Successfully updated the user"
+            }
+            status = HTTPStatus.OK
+
+        else:
+            response = {
+                'message': "Error while updating the user"
+            }
+            status = HTTPStatus.INTERNAL_SERVER_ERROR
+
+    else:
+        response = {
+            'message': "There was an error with the request",
+            'error': validator.errors
+        }
+        status = HTTPStatus.BAD_REQUEST
 
     return response, status
 
-
-def patch_user(params: dict):
-    response = {
-        'message': "Missing query parameters"
-    }
-    status = HTTPStatus.BAD_REQUEST
-
-    return response, status
