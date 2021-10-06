@@ -71,9 +71,9 @@ POST_STAFF_SCHEMA = {
 }
 
 PATCH_STAFF_SCHEMA = {
-	'userId' : {
+	'staffId' : {
 		'required': True,
-		'type': 'string',
+		'type': 'integer',
 	},
 	'firstLastname' : {
 		'required': True,
@@ -114,9 +114,5 @@ PATCH_STAFF_SCHEMA = {
 	'username': {
 		'required': True,
 		'type': 'string'
-	},
-	'salt': {
-		'required': True,
-		'type': 'string',
 	}
 }
