@@ -2,6 +2,10 @@ import json
 import logging
 from http import HTTPStatus
 
+import cerberus
+
+import session_schemas
+
 from connection import DBConnection
 from encoder import DateTimeEncoder
 
@@ -17,7 +21,8 @@ def lambda_handler(event, _):
     if method == "GET" and params:
         response, status = get_session(params)
     elif body:
-        logging.error(f"Missing body for {method} request")
+        body = json.loads(body)
+        
 
         if method == "POST":
             response,status = post_session(body)
@@ -84,6 +89,60 @@ def get_session(params: dict):
 
     return response, status
 
-   
+
+def post_session(body: dict):
+
+    validator = cerberus.Validator(session_schemas.POST_SESSION_SCHEMA)
+
+    if validator.validate(body):
+        db_conn = DBConnection()
+
+        _, query_status_code = db_conn.execute_query(
+            query="""
+            INSERT INTO cetac_session(
+                tool,
+                intervention_type,
+                session_number,
+                evaluation,
+                session_date,
+                motive,
+                recovery_fee,
+                record_id 
+            ) Values(
+                %(tool)s,
+                %(intervention_type)s,
+                %(session_number)s,
+                %(evaluation)s,
+                %(session_date)s,
+                %(motive)s,
+                %(recovery_fee)s,
+                %(record_id)s
+            )
+            """,
+            params=body
+        )
+
+        if query_status_code == HTTPStatus.OK:
+            response = {
+                'message': "Successfully added the session"
+            }
+            status = HTTPStatus.OK
+
+        else:
+            response = {
+                'message': "Error while inserting the session"
+            }
+            status = HTTPStatus.INTERNAL_SERVER_ERROR
+
+    else:
+        response = {
+            'message': "There was an error with the request",
+            'error': validator.errors
+        }
+        status = HTTPStatus.BAD_REQUEST
+
+    return response, status
+
+
 
     
