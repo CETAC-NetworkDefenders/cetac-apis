@@ -74,7 +74,7 @@ class StaffQueries(Enum):
 		UPDATE 
 			cetac_staff
 		SET 
-			first_lastname = %(firsLastname)s,
+			first_lastname = %(firstLastname)s,
 			second_lastname = %(secondLastname)s, 
 			firstname = %(firstname)s, 
 			username = %(username)s, 
@@ -85,7 +85,7 @@ class StaffQueries(Enum):
 			neighborhood = %(neighborhood)s, 
 			address_number = %(addressNumber)s
 		WHERE 
-			id = %(staff_id)s
+			id = %(staffId)s
 	"""
 
 	delete_staff = """
