@@ -4,7 +4,8 @@ from enum import Enum
 class StaffQueries(Enum):
 
 	get_staff_info = """
-		SELECT     
+		SELECT
+			id,     
 			first_lastname,
 			second_lastname, 
 			firstname, 
