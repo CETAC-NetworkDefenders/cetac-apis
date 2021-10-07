@@ -11,7 +11,7 @@ GET_STAFF_LISTING_SCHEMA = {
 	},
 	'accessLevel': {
 		'required': True,
-		'type': 'string', 'allowed': ['admin', 'thanatologist']
+		'type': 'string', 'allowed': ['admin', 'thanatologist', 'admin_support']
 	},
 	'lastnameFilter': {
 		'required': False,

@@ -22,22 +22,15 @@ class StaffQueries(Enum):
 	"""
 
 	get_staff_listing = """
-		SELECT 
+		SELECT
+			id,
 			first_lastname,
-			second_lastname, 
+			second_lastname,
 			firstname
 		FROM 
 			cetac_staff
 		WHERE 
 			access_level = %(access_level)s
-	"""
-
-	lastname_filter = """
-		AND first_lastname = %(first_lastname)s
-	"""
-
-	two_filters = """
-		OR access_level = %(access_level2)s
 	"""
 
 	create_staff = """

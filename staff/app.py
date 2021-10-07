@@ -118,15 +118,6 @@ def get_staff_listing(params: dict):
             'access_level': params['accessLevel']
         }
 
-        lastname_filter = params.get("lastnameFilter")
-        if lastname_filter:
-            query += StaffQueries.listing_filter.value
-            query_params['first_lastname']: lastname_filter
-
-        elif params['accessLevel'] == 'admin':
-            query += StaffQueries.two_filters.value
-            query_params['access_level2'] = 'admin_support'
-
         query_response, query_status_code = db_conn.execute_query(query=query, params=query_params)
 
         if query_status_code == HTTPStatus.OK:
