@@ -4,7 +4,8 @@ from enum import Enum
 class StaffQueries(Enum):
 
 	get_staff_info = """
-		SELECT     
+		SELECT
+			id,     
 			first_lastname,
 			second_lastname, 
 			firstname, 
@@ -22,22 +23,15 @@ class StaffQueries(Enum):
 	"""
 
 	get_staff_listing = """
-		SELECT 
+		SELECT
+			id,
 			first_lastname,
-			second_lastname, 
+			second_lastname,
 			firstname
 		FROM 
 			cetac_staff
 		WHERE 
 			access_level = %(access_level)s
-	"""
-
-	lastname_filter = """
-		AND first_lastname = %(first_lastname)s
-	"""
-
-	two_filters = """
-		OR access_level = %(access_level2)s
 	"""
 
 	create_staff = """
@@ -74,7 +68,7 @@ class StaffQueries(Enum):
 		UPDATE 
 			cetac_staff
 		SET 
-			first_lastname = %(firsLastname)s,
+			first_lastname = %(firstLastname)s,
 			second_lastname = %(secondLastname)s, 
 			firstname = %(firstname)s, 
 			username = %(username)s, 
@@ -85,7 +79,7 @@ class StaffQueries(Enum):
 			neighborhood = %(neighborhood)s, 
 			address_number = %(addressNumber)s
 		WHERE 
-			id = %(staff_id)s
+			id = %(staffId)s
 	"""
 
 	delete_staff = """

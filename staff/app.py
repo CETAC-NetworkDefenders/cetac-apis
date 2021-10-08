@@ -118,15 +118,6 @@ def get_staff_listing(params: dict):
             'access_level': params['accessLevel']
         }
 
-        lastname_filter = params.get("lastnameFilter")
-        if lastname_filter:
-            query += StaffQueries.listing_filter.value
-            query_params['first_lastname']: lastname_filter
-
-        elif params['accessLevel'] == 'admin':
-            query += StaffQueries.two_filters.value
-            query_params['access_level2'] = 'admin_support'
-
         query_response, query_status_code = db_conn.execute_query(query=query, params=query_params)
 
         if query_status_code == HTTPStatus.OK:
@@ -230,10 +221,40 @@ def delete_staff(params: dict):
 
 
 def patch_staff(params: dict):
-    response = {
-        'message': "Missing query parameters"
-    }
-    status = HTTPStatus.BAD_REQUEST
+    """
+    Update a staff member to the DB
+    :param body
+    :return:
+    """
+    validator = cerberus.Validator(staff_schemas.PATCH_STAFF_SCHEMA)
+
+    if validator.validate(params):
+        db_conn = DBConnection()
+
+        _, query_status_code = db_conn.execute_query(
+            query = StaffQueries.update_staff.value, params=params
+        )
+
+        if query_status_code == HTTPStatus.OK:
+            response = {
+                'message': "Succesfully updated the user"
+            }
+            status=HTTPStatus.OK
+
+        else:
+            response = {
+                'message': "Error while updating the usre"
+            }
+            status = HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+
+    else:
+        response = {
+            'message': "There was an error with the request",
+            'error': validator.errors
+        }
+        status = HTTPStatus.BAD_REQUEST
 
     return response, status
 

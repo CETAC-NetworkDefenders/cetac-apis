@@ -11,7 +11,7 @@ GET_STAFF_LISTING_SCHEMA = {
 	},
 	'accessLevel': {
 		'required': True,
-		'type': 'string'
+		'type': 'string', 'allowed': ['admin', 'thanatologist', 'admin_support']
 	},
 	'lastnameFilter': {
 		'required': False,
@@ -67,5 +67,52 @@ POST_STAFF_SCHEMA = {
 	'salt': {
 		'required': True,
 		'type': 'string',
+	}
+}
+
+PATCH_STAFF_SCHEMA = {
+	'staffId' : {
+		'required': True,
+		'type': 'integer',
+	},
+	'firstLastname' : {
+		'required': True,
+		'type': 'string'
+	},
+	'secondLastname': {
+		'required': True,
+		'type': 'string'
+	},
+	'firstname': {
+		'required': True,
+		'type': 'string'
+	},
+	'accessLevel': {
+		'required': True,
+		'type': 'string'
+	},
+	'cellphone': {
+		'required': True,
+		'type': 'string'
+	},
+	'neighborhood': {
+		'required': True,
+		'type': 'string'
+	},
+	'zipCode': {
+		'required': True,
+		'type': 'string'
+	},
+	'street': {
+		'required': True,
+		'type': 'string'
+	},
+	'addressNumber': {
+		'required': True,
+		'type': 'integer'
+	},
+	'username': {
+		'required': True,
+		'type': 'string'
 	}
 }
