@@ -18,7 +18,13 @@ def lambda_handler(event, _):
     body = event.get("body")
 
     if method == "GET" and params:
-        response, status = get_user(params)
+        if "staffId" in params.keys():
+            response, status = get_user_listing_by_staff_id(params)
+        elif "listing" in params.keys():
+            response, status = get_user_listing(params)
+        else:
+            response, status = get_user(params)
+
 
     elif body:
         logging.error(f"Missing body for {method} request")
@@ -88,6 +94,87 @@ def get_user(params: dict):
         }
         status = HTTPStatus.BAD_REQUEST
         logging.error(params)
+
+    return response, status
+
+
+def get_user_listing(params: dict):
+    """
+    Obtain a list with the lastnames and name of every registered user.
+    :param params: Dictionary with query parameters.
+    :return:
+    """
+    validator = cerberus.Validator(user_schemas.GET_USER_LISTING_SCHEMA)
+
+    if validator.validate(params):
+        db_conn = DBConnection()
+
+        query = UserQueries.get_user_listing.value
+        query_params = {
+            'listing': params['listing']
+        }
+
+        query_response, query_status_code = db_conn.execute_query(query=query, params=query_params)
+
+        if query_status_code == HTTPStatus.OK:
+            response = {
+                'userList': query_response
+            }
+            status = HTTPStatus.OK
+
+        else:
+            response = {
+                'message': "Error while obtaining the data"
+            }
+            status = HTTPStatus.INTERNAL_SERVER_ERROR
+
+    else:
+        response = {
+            'message': "There was an error with the request",
+            'error': validator.errors
+        }
+        status = HTTPStatus.BAD_REQUEST
+
+    return response, status
+
+
+def get_user_listing_by_staff_id(params: dict):
+    """
+    Obtain a list with the lastnames and name of all users attended by thanatologist.
+    :param params: Dictionary with query parameters.
+    :return:
+    """
+    validator = cerberus.Validator(user_schemas.GET_USER_LISTING_BY_STAFF_ID_SCHEMA)
+
+    if validator.validate(params):
+        db_conn = DBConnection()
+
+        query = UserQueries.get_user_listing_by_staff_id.value
+        query_params = {
+            'listing': params['listing'],
+            'staff_id': params['staffId']
+        }
+
+        query_response, query_status_code = db_conn.execute_query(query=query, params=query_params)
+
+        if query_status_code == HTTPStatus.OK:
+            response = {
+                'userList': query_response
+            }
+            status = HTTPStatus.OK
+
+        else:
+            response = {
+                'message': "Error while obtaining the data"
+            }
+            status = HTTPStatus.INTERNAL_SERVER_ERROR
+
+    else:
+        response = {
+            'message': "There was an error with the request",
+            'error': validator.errors
+        }
+        status = HTTPStatus.BAD_REQUEST
 
     return response, status
 

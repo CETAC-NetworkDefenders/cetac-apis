@@ -67,3 +67,27 @@ class UserQueries(Enum):
     WHERE
         id = %(userId)s
     """
+
+    get_user_listing = """
+		SELECT 
+			first_lastname,
+			second_lastname,
+			firstname
+		FROM 
+			cetac_user
+	""" 
+
+    get_user_listing_by_staff_id = """
+        SELECT DISTINCT
+            user_id,
+            first_lastname,
+            second_lastname,
+            firstname
+        FROM
+            cetac_user
+        JOIN
+            cetac_record 
+        ON 
+            cetac_user.id = cetac_record.user_id
+        WHERE staff_id = %(staff_id)s;
+    """

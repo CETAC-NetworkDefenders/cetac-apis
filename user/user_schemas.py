@@ -5,6 +5,21 @@ GET_USER_SCHEMA = {
     }
 }
 
+GET_USER_LISTING_SCHEMA = {
+    'listing': {
+        'required': True,
+    },
+}
+
+GET_USER_LISTING_BY_STAFF_ID_SCHEMA = {
+    'listing': {
+        'required': True,
+    },
+    'staffId': {
+        'required': True,
+    },
+}
+
 POST_USER_SCHEMA = {
     'firstLastname': {
         'required': True,
