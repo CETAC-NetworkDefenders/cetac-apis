@@ -18,6 +18,9 @@ def lambda_handler(event, _):
     params = event.get("queryStringParameters")
     body = event.get("body")
 
+    logging.warning("Continue with event execution")
+    logging.warning(f"Received body {body}")
+
     if method == "GET" and params:
         if "listing" in params.keys():
             response, status = get_staff_listing(params)
@@ -26,7 +29,9 @@ def lambda_handler(event, _):
             response, status = get_staff(params)
 
     elif body:
+        logging.warning(type(body))
         body = json.loads(body)
+        logging.warning(f"Body after loading {body}")
 
         if method == "POST":
             response, status = post_staff(body)
@@ -61,20 +66,15 @@ def get_staff(params: dict):
 
     if validator.validate(params):
         db_conn = DBConnection()
-        query_params = {
-            'staff_id': params['staffId'],
-        }
 
         query_response, query_status_code = db_conn.execute_query(
             query=StaffQueries.get_staff_info.value,
-            params=query_params
+            params=params
         )
 
         if query_status_code == HTTPStatus.OK:
             if query_response:
-                response = {
-                    'staffData': query_response[0]
-                }
+                response = query_response[0]
                 status = HTTPStatus.OK
 
             else:
@@ -114,11 +114,7 @@ def get_staff_listing(params: dict):
         db_conn = DBConnection()
 
         query = StaffQueries.get_staff_listing.value
-        query_params = {
-            'access_level': params['accessLevel']
-        }
-
-        query_response, query_status_code = db_conn.execute_query(query=query, params=query_params)
+        query_response, query_status_code = db_conn.execute_query(query=query, params=params)
 
         if query_status_code == HTTPStatus.OK:
             response = {
@@ -190,13 +186,10 @@ def delete_staff(params: dict):
 
     if validator.validate(params):
         db_conn = DBConnection()
-        query_params = {
-            'staff_id': params['staffId'],
-        }
 
         _, query_status_code = db_conn.execute_query(
             query=StaffQueries.delete_staff.value,
-            params=query_params
+            params=params
         )
 
         if query_status_code == HTTPStatus.OK:
@@ -227,29 +220,31 @@ def patch_staff(params: dict):
     :return:
     """
     validator = cerberus.Validator(staff_schemas.PATCH_STAFF_SCHEMA)
+    logging.warning("Executing patch")
 
     if validator.validate(params):
+        logging.warning("Passed validation")
         db_conn = DBConnection()
 
         _, query_status_code = db_conn.execute_query(
-            query = StaffQueries.update_staff.value, params=params
+            query=StaffQueries.update_staff.value, params=params
         )
 
         if query_status_code == HTTPStatus.OK:
+            logging.warning("Successfully updated the user")
             response = {
                 'message': "Succesfully updated the user"
             }
             status=HTTPStatus.OK
 
         else:
+            logging.warning("Error while updating the user")
             response = {
-                'message': "Error while updating the usre"
+                'message': "Error while updating the user"
             }
             status = HTTPStatus.INTERNAL_SERVER_ERROR
-
-
-
     else:
+        logging.warning(f"Does not pass validation {validator.errors}")
         response = {
             'message': "There was an error with the request",
             'error': validator.errors

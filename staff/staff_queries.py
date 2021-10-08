@@ -49,15 +49,15 @@ class StaffQueries(Enum):
 			password,
 			salt
 		) VALUES (
-			%(firstLastname)s, 
-			%(secondLastname)s, 
+			%(first_lastname)s, 
+			%(second_lastname)s, 
 			%(firstname)s, 
-			%(accessLevel)s, 
+			%(access_level)s, 
 			%(cellphone)s, 
-			%(zipCode)s, 
+			%(zip_code)s, 
 			%(street)s, 
 			%(neighborhood)s, 
-			%(addressNumber)s, 
+			%(address_number)s, 
 			%(username)s, 
 			%(password)s, 
 			%(salt)s			
@@ -68,18 +68,16 @@ class StaffQueries(Enum):
 		UPDATE 
 			cetac_staff
 		SET 
-			first_lastname = %(firstLastname)s,
-			second_lastname = %(secondLastname)s, 
+			first_lastname = %(first_lastname)s,
+			second_lastname = %(second_lastname)s, 
 			firstname = %(firstname)s, 
-			username = %(username)s, 
-			access_level = %(accessLevel)s, 
 			cellphone = %(cellphone)s, 
-			zip_code = %(zipCode)s, 
+			zip_code = %(zip_code)s, 
 			street = %(street)s, 
 			neighborhood = %(neighborhood)s, 
-			address_number = %(addressNumber)s
+			address_number = %(address_number)s
 		WHERE 
-			id = %(staffId)s
+			id = %(id)s
 	"""
 
 	delete_staff = """

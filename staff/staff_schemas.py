@@ -1,6 +1,6 @@
 
 GET_DELETE_STAFF_SCHEMA = {
-	'staffId': {
+	'staff_id': {
 		'required': True,
 	}
 }
@@ -9,22 +9,22 @@ GET_STAFF_LISTING_SCHEMA = {
 	'listing': {
 		'required': True,
 	},
-	'accessLevel': {
+	'access_level': {
 		'required': True,
 		'type': 'string', 'allowed': ['admin', 'thanatologist', 'admin_support']
 	},
-	'lastnameFilter': {
+	'lastname_filter': {
 		'required': False,
 		'type': 'string'
 	}
 }
 
 POST_STAFF_SCHEMA = {
-	'firstLastname': {
+	'first_lastname': {
 		'required': True,
 		'type': 'string'
 	},
-	'secondLastname': {
+	'second_lastname': {
 		'required': True,
 		'type': 'string'
 	},
@@ -32,7 +32,7 @@ POST_STAFF_SCHEMA = {
 		'required': True,
 		'type': 'string'
 	},
-	'accessLevel': {
+	'access_level': {
 		'required': True,
 		'type': 'string'
 	},
@@ -44,7 +44,7 @@ POST_STAFF_SCHEMA = {
 		'required': True,
 		'type': 'string'
 	},
-	'zipCode': {
+	'zip_code': {
 		'required': True,
 		'type': 'string'
 	},
@@ -52,7 +52,7 @@ POST_STAFF_SCHEMA = {
 		'required': True,
 		'type': 'string'
 	},
-	'addressNumber': {
+	'address_number': {
 		'required': True,
 		'type': 'integer'
 	},
@@ -71,15 +71,15 @@ POST_STAFF_SCHEMA = {
 }
 
 PATCH_STAFF_SCHEMA = {
-	'staffId' : {
+	'id': {
 		'required': True,
 		'type': 'integer',
 	},
-	'firstLastname' : {
+	'first_lastname': {
 		'required': True,
 		'type': 'string'
 	},
-	'secondLastname': {
+	'second_lastname': {
 		'required': True,
 		'type': 'string'
 	},
@@ -87,8 +87,8 @@ PATCH_STAFF_SCHEMA = {
 		'required': True,
 		'type': 'string'
 	},
-	'accessLevel': {
-		'required': True,
+	'access_level': {
+		'required': False,
 		'type': 'string'
 	},
 	'cellphone': {
@@ -99,7 +99,7 @@ PATCH_STAFF_SCHEMA = {
 		'required': True,
 		'type': 'string'
 	},
-	'zipCode': {
+	'zip_code': {
 		'required': True,
 		'type': 'string'
 	},
@@ -107,12 +107,8 @@ PATCH_STAFF_SCHEMA = {
 		'required': True,
 		'type': 'string'
 	},
-	'addressNumber': {
+	'address_number': {
 		'required': True,
 		'type': 'integer'
-	},
-	'username': {
-		'required': True,
-		'type': 'string'
 	}
 }

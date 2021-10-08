@@ -9,6 +9,7 @@ from connection import DBConnection
 from encoder import DateTimeEncoder
 from user_queries import UserQueries
 
+
 def lambda_handler(event, _):
     logging.warning(f"Event successfully received: {event}")
     response, status = None, None
@@ -24,7 +25,6 @@ def lambda_handler(event, _):
             response, status = get_user_listing(params)
         else:
             response, status = get_user(params)
-
 
     elif body:
         logging.error(f"Missing body for {method} request")
