@@ -54,7 +54,7 @@ POST_STAFF_SCHEMA = {
 	},
 	'address_number': {
 		'required': True,
-		'type': 'integer'
+		'type': 'string'
 	},
 	'username': {
 		'required': True,
@@ -109,6 +109,5 @@ PATCH_STAFF_SCHEMA = {
 	},
 	'address_number': {
 		'required': True,
-		'type': 'integer'
 	}
 }

@@ -148,3 +148,19 @@ Resources:
             Path: /session
             Method: post
             RestApiId: !Ref CetacApi
+
+  AuthenticationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-AuthAPI'
+      CodeUri: auth/
+      Layers:
+        - !Ref DBAccessLayer
+      Role: !Ref LambdaExecutionRole
+      Events:
+        RetrieveSession:
+          Type: Api
+          Properties:
+            Path: /auth
+            Method: get
+            RestApiId: !Ref CetacApi

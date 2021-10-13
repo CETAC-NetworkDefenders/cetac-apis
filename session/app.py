@@ -22,10 +22,9 @@ def lambda_handler(event, _):
         response, status = get_session(params)
     elif body:
         body = json.loads(body)
-        
 
         if method == "POST":
-            response,status = post_session(body)
+            response, status = post_session(body)
     else:
         response = {
             'message': 'Malformed request'
@@ -36,6 +35,8 @@ def lambda_handler(event, _):
         "headers": {"Content-Type": "application/json"},
         "body": json.dumps(response, cls=DateTimeEncoder)
     }
+
+
 def get_session(params: dict):
     required_params = ["sessionId"]
     if list(params.keys())==required_params:
@@ -90,8 +91,24 @@ def get_session(params: dict):
     return response, status
 
 
-def post_session(body: dict):
+def get_session_listing(params):
+    required_params = ["userId"]
+    if required_params in list(params.keys()):
 
+        query = """
+            SELECT 
+            
+        """
+
+    else:
+        response = {
+            'message': "Missing query parameters"
+            }
+        status = HTTPStatus.BAD_REQUEST
+        logging.error(params)
+
+
+def post_session(body: dict):
     validator = cerberus.Validator(session_schemas.POST_SESSION_SCHEMA)
 
     if validator.validate(body):
@@ -143,6 +160,3 @@ def post_session(body: dict):
 
     return response, status
 
-
-
-    
