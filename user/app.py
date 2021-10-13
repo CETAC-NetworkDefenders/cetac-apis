@@ -70,9 +70,7 @@ def get_user(params: dict):
 
         if query_status_code == HTTPStatus.OK:
             if query_response:
-                response = {
-                    'userData': query_response[0]
-                }
+                response = query_response[0]
                 status = HTTPStatus.OK
 
             else:
