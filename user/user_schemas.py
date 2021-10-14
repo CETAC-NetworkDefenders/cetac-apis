@@ -21,11 +21,11 @@ GET_USER_LISTING_BY_STAFF_ID_SCHEMA = {
 }
 
 POST_USER_SCHEMA = {
-    'firstLastname': {
+    'first_lastname': {
         'required': True,
         'type': 'string'
     },
-    'secondLastname': {
+    'second_lastname': {
         'required': True,
         'type': 'string'
     },
@@ -37,7 +37,7 @@ POST_USER_SCHEMA = {
         'required': True,
         'type': 'string'
     },
-    'maritalStatus': {
+    'marital_status': {
         'required': True,
         'type': 'string'
     },
@@ -49,11 +49,11 @@ POST_USER_SCHEMA = {
         'required': True,
         'type': 'string'
     },
-    'birthDate': {
+    'birth_date': {
         'required': True,
         'type': 'string'
     },
-    'birthPlace': {
+    'birth_place': {
         'required': True,
         'type': 'string'
     },
@@ -65,30 +65,30 @@ POST_USER_SCHEMA = {
         'required': True,
         'type': 'string'
     },
-    'zipCode': {
+    'zip_code': {
         'required': True,
-        'type': 'integer'
+        'type': 'string'
     },
     'street': {
         'required': True,
         'type': 'string'
     },
-    'addressNumber': {
+    'address_number': {
         'required': True,
-        'type': 'integer'
+        'type': 'string'
     },
 }
 
 PATCH_USER_SCHEMA = {
-    'userId': {
+    'id': {
         'required': True,
         'type': 'integer'
     },
-    'firstLastname': {
+    'first_lastname': {
         'required': True,
         'type': 'string'
     },
-    'secondLastname': {
+    'second_lastname': {
         'required': True,
         'type': 'string'
     },
@@ -100,7 +100,7 @@ PATCH_USER_SCHEMA = {
         'required': True,
         'type': 'string'
     },
-    'maritalStatus': {
+    'marital_status': {
         'required': True,
         'type': 'string'
     },
@@ -112,11 +112,11 @@ PATCH_USER_SCHEMA = {
         'required': True,
         'type': 'string'
     },
-    'birthDate': {
+    'birth_date': {
         'required': True,
         'type': 'string'
     },
-    'birthPlace': {
+    'birth_place': {
         'required': True,
         'type': 'string'
     },
@@ -128,16 +128,16 @@ PATCH_USER_SCHEMA = {
         'required': True,
         'type': 'string'
     },
-    'zipCode': {
+    'zip_code': {
         'required': True,
-        'type': 'integer'
+        'type': 'string'
     },
     'street': {
         'required': True,
         'type': 'string'
     },
-    'addressNumber': {
+    'address_number': {
         'required': True,
-        'type': 'integer'
+        'type': 'string'
     },
 }
