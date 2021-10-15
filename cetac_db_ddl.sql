@@ -130,6 +130,7 @@ INSERT INTO user_child (
     1
 );
 
+
 -- Sample passwords are the same as usernames.
 INSERT INTO cetac_staff (
     first_lastname,
@@ -141,21 +142,21 @@ INSERT INTO cetac_staff (
     zip_code,
     street,
     address_number,
-    username,
+    email,
     password,
     salt
 ) VALUES (
     'Jiménez',
     'Urgell',
     'Diego Enrique',
-    'thanatologist',
+    'admin',
     '5536493241',
     'Colonia X',
     '04290',
     'Calle X',
     25,
     'diego.urgell',
-    'd7ae5c9d3ae39533baac510171f889e5fc255e5f05ff45a200ca1a13ba4c3339',
+    '054cca6e05d5ac7bf9b65d79343da6c88b4b958ccef6ed0480b49e982b6f90da',
     'a1b2c3d4e5f6g7h8'
 );
 

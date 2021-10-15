@@ -47,7 +47,7 @@ def get_salt(params):
 		FROM 
 			cetac_staff
 		WHERE 
-			username = %(username)s
+			email = %(email)s
 	"""
 	query_result, status_code = db_conn.execute_query(query=query, params=params)
 
