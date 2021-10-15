@@ -9,7 +9,7 @@ class StaffQueries(Enum):
 			first_lastname,
 			second_lastname, 
 			firstname, 
-			username, 
+			email, 
 			access_level, 
 			cellphone, 
 			zip_code, 
@@ -45,7 +45,7 @@ class StaffQueries(Enum):
 			street, 
 			neighborhood, 
 			address_number, 
-			username,
+			email,
 			password,
 			salt
 		) VALUES (
