@@ -237,7 +237,8 @@ INSERT INTO cetac_session (
     session_date,
     motive,
     recovery_fee,
-    record_id
+    record_id,
+    staff_id
 ) VALUES (
     'Sesión Individual',
     'Acompañamiento',
@@ -246,7 +247,8 @@ INSERT INTO cetac_session (
     '2021-09-25',
     'Sesión de Prueba',
     250.0,
-    1
+    1,
+    2
 );
 
 CREATE USER username WITH PASSWORD 'password' VALID UNTIL 'infinity';

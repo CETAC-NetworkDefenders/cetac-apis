@@ -21,7 +21,8 @@ def lambda_handler(event, _):
     if method == "GET" and params:
         if "userId" in params.keys():
             response, status = get_session_listing(params)
-        response, status = get_session(params)
+        else:
+            response, status = get_session(params)
     
     elif body:
         body = json.loads(body)
@@ -98,7 +99,8 @@ def get_session(params: dict):
 def get_session_listing(params):
     db_conn = DBConnection()
 
-    required_params = ["userId"]
+    required_params = "userId"
+
     if required_params in list(params.keys()):
 
         query = """
@@ -107,13 +109,13 @@ def get_session_listing(params):
                 session_date,
                 intervention_type
             FROM
-                cetac_session
-            JOIN
+                (cetac_session
+            INNER JOIN
                 cetac_record
             ON
-                cetac_session.record_id = cetac_record.id
+                cetac_session.record_id = cetac_record.id)
             WHERE
-                user_id = %(user_id)s
+                cetac_record.user_id = %(userId)s
         """
 
         query_response, query_status_code = db_conn.execute_query(query, params)
