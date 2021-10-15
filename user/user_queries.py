@@ -43,7 +43,7 @@ class UserQueries(Enum):
         %(zip_code)s,
         %(street)s,
         %(address_number)s
-    );
+    ) RETURNING id;
     """
 
     update_user = """
