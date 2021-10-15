@@ -7,15 +7,16 @@ CREATE TABLE IF NOT EXISTS cetac_user (
     gender VARCHAR(10),
     marital_status VARCHAR(10),
     phone VARCHAR(10),
-    cellphone VARCHAR(10),
+    cellphone VARCHAR(10) UNIQUE,
     birth_date DATE,
     birth_place VARCHAR(20),
     occupation VARCHAR(20),
     religion VARCHAR(20),
-    zip_code INT,
+    zip_code VARCHAR(5),
     street VARCHAR(20),
     neighborhood VARCHAR(20),
-    address_number INT,
+    address_number VARCHAR(10),
+    children TEXT,
     PRIMARY KEY (id)
 );
 
@@ -45,7 +46,7 @@ CREATE TABLE IF NOT EXISTS cetac_staff (
     street VARCHAR(20),
     neighborhood VARCHAR(20),
     address_number INT,
-    username VARCHAR(30),
+    email VARCHAR(30) UNIQUE,
     password CHAR(64),
     salt CHAR(16),
     PRIMARY KEY (id)
@@ -56,6 +57,7 @@ CREATE TABLE IF NOT EXISTS cetac_record (
     ekr TEXT,
     staff_id INT,
     user_id INT,
+    is_open BOOLEAN,
     PRIMARY KEY (id),
     FOREIGN KEY (staff_id) REFERENCES cetac_staff(id),
     FOREIGN KEY (user_id) REFERENCES cetac_user(id)
@@ -71,8 +73,10 @@ CREATE TABLE IF NOT EXISTS cetac_session (
     motive TEXT,
     recovery_fee REAL,
     record_id INT,
+    staff_id INT,
     PRIMARY KEY (id),
     FOREIGN KEY (record_id) REFERENCES cetac_record(id)
+    FOREIGN KEY (staff_id) REFERENCES cetac_staff(id)
 );
 
 -- Insert sample information into the DB
@@ -104,9 +108,10 @@ INSERT INTO cetac_user (
     'CDMX',
     'Estudiante',
     'Budista',
-    09855,
+    'Colonia X',
+    '09855',
     'Calle X',
-    32
+    '32'
 );
 
 INSERT INTO user_child (
@@ -219,6 +224,9 @@ INSERT INTO cetac_record (
     1,
     1
 );
+
+encuadre -> pedimos la EKR -> bandera indica que hacer la API
+EKR -> None
 
 INSERT INTO cetac_session (
     tool,

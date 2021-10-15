@@ -91,6 +91,7 @@ def get_session(params: dict):
     return response, status
 
 
+### TODO: FINISH LISTING
 def get_session_listing(params):
     required_params = ["userId"]
     if required_params in list(params.keys()):
@@ -108,6 +109,7 @@ def get_session_listing(params):
         logging.error(params)
 
 
+### PEDIR EL TIPO DE SESION Y HACER AJUSTE DE EKR Y HACER UPDATE DE RECORD
 def post_session(body: dict):
     validator = cerberus.Validator(session_schemas.POST_SESSION_SCHEMA)
 

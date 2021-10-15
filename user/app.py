@@ -176,7 +176,7 @@ def get_user_listing_by_staff_id(params: dict):
 
     return response, status
 
-
+###  TODO: INSERT RECORD
 def post_user(body: dict):
     """
     Add a new user to the DB

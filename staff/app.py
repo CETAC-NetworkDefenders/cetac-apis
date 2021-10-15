@@ -253,3 +253,6 @@ def patch_staff(params: dict):
 
     return response, status
 
+
+### TODO: PUT RECIBE USER ID, reabre el expediente y lo asigna al nuevo staff
+
