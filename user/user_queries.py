@@ -29,20 +29,20 @@ class UserQueries(Enum):
         street,
         address_number
     ) VALUES (
-        %(firstLastname)s,
-        %(secondLastname)s,
+        %(first_lastname)s,
+        %(second_lastname)s,
         %(firstname)s,
         %(gender)s,
-        %(maritalStatus)s,
+        %(marital_status)s,
         %(phone)s,
         %(cellphone)s,
-        %(birthDate)s,
-        %(birthPlace)s,
+        %(birth_date)s,
+        %(birth_place)s,
         %(occupation)s,
         %(religion)s,
-        %(zipCode)s,
+        %(zip_code)s,
         %(street)s,
-        %(addressNumber)s
+        %(address_number)s
     );
     """
 
@@ -50,22 +50,22 @@ class UserQueries(Enum):
     UPDATE
         cetac_user
     SET
-        first_lastname = %(firstLastname)s,
-        second_lastname = %(secondLastname)s,
+        first_lastname = %(first_lastname)s,
+        second_lastname = %(second_lastname)s,
         firstname = %(firstname)s,
         gender = %(gender)s,
-        marital_status = %(maritalStatus)s,
+        marital_status = %(marital_status)s,
         phone = %(phone)s,
         cellphone = %(cellphone)s,
-        birth_date = %(birthDate)s,
-        birth_place = %(birthPlace)s,
+        birth_date = %(birth_date)s,
+        birth_place = %(birth_place)s,
         occupation = %(occupation)s,
         religion = %(religion)s,
-        zip_code = %(zipCode)s,
+        zip_code = %(zip_code)s,
         street = %(street)s,
-        address_number = %(addressNumber)s
+        address_number = %(address_number)s
     WHERE
-        id = %(userId)s
+        id = %(id)s
     """
 
     get_user_listing = """

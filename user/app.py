@@ -27,8 +27,8 @@ def lambda_handler(event, _):
             response, status = get_user(params)
 
     elif body:
-        logging.error(f"Missing body for {method} request")
         body = json.loads(body)
+        logging.warning(f"Loaded JSON: {body}")
 
         if method == "POST":
             response, status = post_user(body)
@@ -224,6 +224,7 @@ def patch_user(body: dict):
     validator = cerberus.Validator(user_schemas.PATCH_USER_SCHEMA)
 
     if validator.validate(body):
+        logging.warning(f"Validation pass")
         db_conn = DBConnection()
 
         _, query_status_code = db_conn.execute_query(
@@ -232,12 +233,14 @@ def patch_user(body: dict):
         )
 
         if query_status_code == HTTPStatus.OK:
+            logging.warning(f"Query executed")
             response = {
                 'message': "Successfully updated the user"
             }
             status = HTTPStatus.OK
 
         else:
+            logging.error(f"Error while updating the user")
             response = {
                 'message': "Error while updating the user"
             }
@@ -248,6 +251,7 @@ def patch_user(body: dict):
             'message': "There was an error with the request",
             'error': validator.errors
         }
+        logging.error(validator.errors)
         status = HTTPStatus.BAD_REQUEST
 
     return response, status
