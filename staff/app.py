@@ -24,7 +24,12 @@ def lambda_handler(event, _):
     if method == "GET" and params:
         if "listing" in params.keys():
             response, status = get_staff_listing(params)
-
+        elif "intervention_type_report" in params.keys():
+            response, status = get_intervention_type_report(params)
+        elif "users_month_report" in params.keys():
+            response, status = get_staff_listing(params)
+        elif "recovery_fee_report" in params.keys():
+            response, status = get_staff_listing(params)
         else:
             response, status = get_staff(params)
 
@@ -252,6 +257,43 @@ def patch_staff(params: dict):
         status = HTTPStatus.BAD_REQUEST
 
     return response, status
+
+
+def get_intervention_type_report(params: dict):
+        """
+        """
+        validator = cerberus.Validator(staff_schemas.GET_INTERVENTION_TYPE_REPORT_SCHEMA)
+
+        if validator.validate(params):
+            db_conn = DBConnection()
+
+            query_response, query_status_code = db_conn.execute_query(
+                query=StaffQueries.get_intervention_type_report.value,
+                params=params
+            )
+
+            if query_status_code == HTTPStatus.OK:
+                response = {
+                    'report': query_response
+                }
+                status = HTTPStatus.OK
+
+            else:
+                response = {
+                    'message': "Error while obtaining the data"
+                }
+                status = HTTPStatus.INTERNAL_SERVER_ERROR
+
+        else:
+            response = {
+                'message': "There was an error with the request",
+                'error': validator.errors
+            }
+            status = HTTPStatus.BAD_REQUEST
+
+        return response, status
+
+
 
 
 ### TODO: PUT RECIBE USER ID, reabre el expediente y lo asigna al nuevo staff

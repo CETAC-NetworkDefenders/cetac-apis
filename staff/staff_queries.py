@@ -86,3 +86,13 @@ class StaffQueries(Enum):
 		WHERE
 			id = %(staff_id)s
 	"""
+
+	get_intervention_type_report = """
+		SELECT
+			intervention_type,
+			COUNT(intervention_type) AS total
+		FROM
+			cetac_session
+		GROUP BY
+			intervention_type
+	"""

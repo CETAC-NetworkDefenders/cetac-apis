@@ -111,3 +111,13 @@ PATCH_STAFF_SCHEMA = {
 		'required': True,
 	}
 }
+
+GET_INTERVENTION_TYPE_REPORT_SCHEMA = {
+	'intervention_type_report': {
+		'required': True,
+	},
+	'access_level': {
+		'required': True,
+		'type': 'string', 'allowed': ['admin', 'thanatologist', 'admin_support']
+	}
+}
