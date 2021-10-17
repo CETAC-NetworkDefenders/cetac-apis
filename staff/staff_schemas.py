@@ -123,7 +123,7 @@ GET_INTERVENTION_TYPE_REPORT_SCHEMA = {
 }
 
 GET_USERS_MONTH_REPORT_SCHEMA = {
-	'users_month_report': {
+	'users_report': {
 		'required': True,
 	},
 	'access_level': {
