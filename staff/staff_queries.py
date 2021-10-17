@@ -97,7 +97,7 @@ class StaffQueries(Enum):
 			intervention_type
 	"""
 
-	get_users_month_report = """
+	get_users_report = """
 		SELECT
 			gender,
 			count(gender) AS total
@@ -111,6 +111,8 @@ class StaffQueries(Enum):
 					cetac_record
 				ON
 					cetac_session.record_id = cetac_record.id
+				WHERE
+					session_date >= date_trunc(%(timeframe)s, CURRENT_DATE)
 			) AS user_id
 		JOIN
 			cetac_user
@@ -119,3 +121,4 @@ class StaffQueries(Enum):
 		GROUP BY
 			gender
 		"""
+	

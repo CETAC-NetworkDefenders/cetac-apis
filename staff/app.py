@@ -31,8 +31,8 @@ def lambda_handler(event, _):
             response, status = get_intervention_type_report(params)
 
         elif "users_report" in params.keys():
-            logging.warning("Getting staff users month report")
-            response, status = get_users_report_weekly(params)
+            logging.warning("Getting staff users report")
+            response, status = get_users_report(params)
 
         elif "recovery_fee_report" in params.keys():
             response, status = get_staff_listing(params)
@@ -299,17 +299,17 @@ def get_intervention_type_report(params: dict):
 
         return response, status
 
-# TODO: add date restrictions
-def get_users_report_weekly(params: dict):
+
+def get_users_report(params: dict):
     """
     """
-    validator = cerberus.Validator(staff_schemas.GET_USERS_MONTH_REPORT_SCHEMA)
+    validator = cerberus.Validator(staff_schemas.GET_USERS_REPORT_SCHEMA)
 
     if validator.validate(params):
         db_conn = DBConnection()
 
         query_response, query_status_code = db_conn.execute_query(
-            query=StaffQueries.get_users_month_report.value,
+            query=StaffQueries.get_users_report.value,
             params=params
         )
 
