@@ -121,3 +121,13 @@ GET_INTERVENTION_TYPE_REPORT_SCHEMA = {
 		'type': 'string', 'allowed': ['admin', 'thanatologist', 'admin_support']
 	}
 }
+
+GET_USERS_MONTH_REPORT_SCHEMA = {
+	'users_month_report': {
+		'required': True,
+	},
+	'access_level': {
+		'required': True,
+		'type': 'string', 'allowed': ['admin', 'thanatologist', 'admin_support']
+	}
+}

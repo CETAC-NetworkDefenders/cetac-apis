@@ -96,3 +96,26 @@ class StaffQueries(Enum):
 		GROUP BY
 			intervention_type
 	"""
+
+	get_users_month_report = """
+		SELECT
+			gender,
+			count(gender) AS total
+		FROM 
+			(
+				SELECT DISTINCT
+					user_id
+				FROM 
+					cetac_session
+				JOIN
+					cetac_record
+				ON
+					cetac_session.record_id = cetac_record.id
+			) AS user_id
+		JOIN
+			cetac_user
+		ON
+			user_id = cetac_user.id
+		GROUP BY
+			gender
+		"""
