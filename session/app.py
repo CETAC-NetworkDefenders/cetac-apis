@@ -144,8 +144,10 @@ def get_session_listing(params):
 ### PEDIR EL TIPO DE SESION Y HACER AJUSTE DE EKR Y HACER UPDATE DE RECORD
 def post_session(body: dict):
     validator = cerberus.Validator(session_schemas.POST_SESSION_SCHEMA)
+    logging.warning("Received a POST request")
 
     if validator.validate(body):
+        logging.warning("Passed validation")
         db_conn = DBConnection()
 
         query = """
@@ -186,18 +188,22 @@ def post_session(body: dict):
         _, query_status_code = db_conn.execute_query(query, body)
 
         if query_status_code == HTTPStatus.OK:
+            logging.warning("Executed query succesfully")
+
             response = {
                 'message': "Successfully added the session"
             }
             status = HTTPStatus.OK
 
         else:
+            logging.error("Error in the query")
             response = {
                 'message': "Error while inserting the session"
             }
             status = HTTPStatus.INTERNAL_SERVER_ERROR
 
     else:
+        logging.error(f"Validation error {validator.errors}")
         response = {
             'message': "There was an error with the request",
             'error': validator.errors

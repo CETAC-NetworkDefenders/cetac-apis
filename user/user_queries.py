@@ -11,7 +11,7 @@ class UserQueries(Enum):
         cetac_record
     ON cetac_user.id = cetac_record.user_id
     WHERE 
-        cetac_user.id = %(user_id)
+        cetac_user.id = %(user_id)s
     """
 
 
@@ -95,6 +95,7 @@ class UserQueries(Enum):
     get_user_listing_by_staff_id = """
         SELECT DISTINCT
             user_id,
+            cetac_record.id AS record_id, 
             first_lastname,
             second_lastname,
             firstname

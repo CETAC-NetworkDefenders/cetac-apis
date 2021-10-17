@@ -37,6 +37,6 @@ POST_SESSION_SCHEMA = {
 	},
 	'is_open': {
 		'required': True,
-		'type': 'bool'
+		'type': 'boolean'
 	}
 }

@@ -186,6 +186,7 @@ def post_user(body: dict, params:dict):
     :return:
     """
     validator = cerberus.Validator(user_schemas.POST_USER_SCHEMA)
+    validator.allow_unknown = True
 
     if validator.validate(body) and 'staff_id' in params:
         db_conn = DBConnection()
@@ -226,6 +227,7 @@ def patch_user(body: dict):
     :return:
     """
     validator = cerberus.Validator(user_schemas.PATCH_USER_SCHEMA)
+    validator.allow_unknown = True
 
     if validator.validate(body):
         logging.warning(f"Validation pass")
