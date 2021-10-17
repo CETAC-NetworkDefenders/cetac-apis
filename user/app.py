@@ -31,7 +31,7 @@ def lambda_handler(event, _):
         logging.warning(f"Loaded JSON: {body}")
 
         if method == "POST":
-            response, status = post_user(body)
+            response, status = post_user(body, params)
 
         elif method == "PATCH":
             response, status = patch_user(body)
@@ -176,17 +176,21 @@ def get_user_listing_by_staff_id(params: dict):
 
     return response, status
 
+
 ###  TODO: INSERT RECORD
-def post_user(body: dict):
+def post_user(body: dict, params:dict):
     """
     Add a new user to the DB
     :param body
+    :param params
     :return:
     """
     validator = cerberus.Validator(user_schemas.POST_USER_SCHEMA)
 
-    if validator.validate(body):
+    if validator.validate(body) and 'staff_id' in params:
         db_conn = DBConnection()
+
+        body['staff_id'] = params['staff_id']
 
         _, query_status_code = db_conn.execute_query(
             query=UserQueries.create_user.value,

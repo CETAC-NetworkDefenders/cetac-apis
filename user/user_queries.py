@@ -3,47 +3,62 @@ from enum import Enum
 class UserQueries(Enum):
     get_user = """
     SELECT
-        *
+        cetac_user.*, 
+        cetac_record.id as record_id
     FROM 
         cetac_user
+    INNER JOIN 
+        cetac_record
+    ON cetac_user.id = cetac_record.user_id
     WHERE 
-        id = %(user_id)s
+        cetac_user.id = %(user_id)
     """
 
+
     create_user = """
-    INSERT INTO
-        cetac_user
-    (
-        first_lastname,
-        second_lastname,
-        firstname,
-        gender,
-        marital_status,
-        phone,
-        cellphone,
-        birth_date,
-        birth_place,
-        occupation,
-        religion,
-        zip_code,
-        street,
-        address_number
-    ) VALUES (
-        %(first_lastname)s,
-        %(second_lastname)s,
-        %(firstname)s,
-        %(gender)s,
-        %(marital_status)s,
-        %(phone)s,
-        %(cellphone)s,
-        %(birth_date)s,
-        %(birth_place)s,
-        %(occupation)s,
-        %(religion)s,
-        %(zip_code)s,
-        %(street)s,
-        %(address_number)s
-    ) RETURNING id;
+        WITH inserted_user AS (
+            INSERT INTO cetac_user(
+                first_lastname,
+                second_lastname,
+                firstname,
+                gender,
+                marital_status,
+                phone,
+                cellphone,
+                birth_date,
+                birth_place,
+                occupation,
+                religion,
+                zip_code,
+                street,
+                address_number
+            ) VALUES (
+                %(first_lastname)s,
+                %(second_lastname)s,
+                %(firstname)s,
+                %(gender)s,
+                %(marital_status)s,
+                %(phone)s,
+                %(cellphone)s,
+                %(birth_date)s,
+                %(birth_place)s,
+                %(occupation)s,
+                %(religion)s,
+                %(zip_code)s,
+                %(street)s,
+                %(address_number)s
+            ) RETURNING id
+        ) INSERT INTO cetac_record (
+            staff_id, 
+            user_id, 
+            ekr, 
+            is_open
+        ) VALUES(
+            %(staff_id)s, 
+            (SELECT id from inserted_user), 
+            'EKR DE PRUEBA',
+            TRUE
+        )
     """
 
     update_user = """

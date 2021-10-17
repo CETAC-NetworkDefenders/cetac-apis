@@ -47,18 +47,18 @@ def get_session(params: dict):
         db_conn = DBConnection()
         query = """
             SELECT 
-            tool,
-            intervention_type,
-            session_number,
-            evaluation,
-            session_date,
-            motive,
-            recovery_fee,
-            record_id   
+                tool,
+                intervention_type,
+                session_number,
+                evaluation,
+                session_date,
+                motive,
+                recovery_fee,
+                record_id   
             FROM
-            cetac_session
+                cetac_session
             WHERE
-            id = %(session_id)s
+                id = %(session_id)s
         """
         params = {
             'session_id': params['sessionId'],
@@ -95,7 +95,6 @@ def get_session(params: dict):
     return response, status
 
 
-### TODO: FINISH LISTING
 def get_session_listing(params):
     db_conn = DBConnection()
 
@@ -149,9 +148,18 @@ def post_session(body: dict):
     if validator.validate(body):
         db_conn = DBConnection()
 
-        _, query_status_code = db_conn.execute_query(
-            query="""
-            INSERT INTO cetac_session(
+        query = """
+            WITH past as (
+                SELECT 
+                    session_number 
+                FROM 
+                    cetac_session
+                WHERE 
+                    record_id = %(record_id)s
+                ORDER BY 
+                    session_date DESC 
+                LIMIT 1
+            ) INSERT INTO cetac_session(
                 tool,
                 intervention_type,
                 session_number,
@@ -160,19 +168,22 @@ def post_session(body: dict):
                 motive,
                 recovery_fee,
                 record_id 
-            ) Values(
+            ) VALUES (
                 %(tool)s,
                 %(intervention_type)s,
-                %(session_number)s,
+                (CASE
+                    WHEN EXISTS(SELECT session_number FROM past)
+                    THEN (SELECT session_number+1 FROM past)
+                    ELSE 1
+                END), 
                 %(evaluation)s,
                 %(session_date)s,
                 %(motive)s,
                 %(recovery_fee)s,
                 %(record_id)s
-            )
-            """,
-            params=body
-        )
+            )"""
+
+        _, query_status_code = db_conn.execute_query(query, body)
 
         if query_status_code == HTTPStatus.OK:
             response = {

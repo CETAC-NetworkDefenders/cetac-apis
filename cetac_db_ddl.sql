@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS cetac_session (
     session_number INT,
     evaluation TEXT,
     session_date DATE,
+    service_type VARCHAR(50)
     motive TEXT,
     recovery_fee REAL,
     record_id INT,
@@ -226,8 +227,8 @@ INSERT INTO cetac_record (
     1
 );
 
-encuadre -> pedimos la EKR -> bandera indica que hacer la API
-EKR -> None
+-- encuadre -> pedimos la EKR -> bandera indica que hacer la API
+-- EKR -> None
 
 INSERT INTO cetac_session (
     tool,

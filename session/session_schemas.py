@@ -8,7 +8,7 @@ POST_SESSION_SCHEMA = {
 		'type': 'string'
 	},
 	'session_number': {
-		'required': True,
+		'required': False,
 		'type': 'integer'
 	},
 	'evaluation': {
@@ -23,6 +23,10 @@ POST_SESSION_SCHEMA = {
 		'required': True,
 		'type': 'string'
 	},
+	'service_type': {
+		'required': True,
+		'type': 'string'
+	},
 	'recovery_fee': {
 		'required': True,
 		'type': 'float'
@@ -31,5 +35,8 @@ POST_SESSION_SCHEMA = {
 		'required': True,
 		'type': 'integer'
 	},
-
+	'is_open': {
+		'required': True,
+		'type': 'bool'
+	}
 }
