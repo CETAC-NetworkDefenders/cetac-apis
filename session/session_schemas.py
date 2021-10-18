@@ -1,3 +1,4 @@
+
 POST_SESSION_SCHEMA = {
 	'tool': {
 		'required': True,
@@ -6,10 +7,6 @@ POST_SESSION_SCHEMA = {
 	'intervention_type': {
 		'required': True,
 		'type': 'string'
-	},
-	'session_number': {
-		'required': False,
-		'type': 'integer'
 	},
 	'evaluation': {
 		'required': True,

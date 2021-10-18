@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS cetac_session (
     session_number INT,
     evaluation TEXT,
     session_date DATE,
-    service_type VARCHAR(50)
+    service_type VARCHAR(50),
     motive TEXT,
     recovery_fee REAL,
     record_id INT,

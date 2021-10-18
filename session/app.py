@@ -43,7 +43,7 @@ def lambda_handler(event, _):
 
 def get_session(params: dict):
     required_params = ["sessionId"]
-    if list(params.keys())==required_params:
+    if list(params.keys()) == required_params:
         db_conn = DBConnection()
         query = """
             SELECT 
@@ -54,7 +54,8 @@ def get_session(params: dict):
                 session_date,
                 motive,
                 recovery_fee,
-                record_id   
+                record_id, 
+                service_type
             FROM
                 cetac_session
             WHERE
@@ -68,9 +69,7 @@ def get_session(params: dict):
     
         if query_status_code == HTTPStatus.OK:
             if query_response:
-                response = {
-                    'sessionData': query_response[0]
-                    }
+                response = query_response[0]
                 status = HTTPStatus.OK
 
             else:
@@ -141,9 +140,10 @@ def get_session_listing(params):
     return response, status
 
 
-### PEDIR EL TIPO DE SESION Y HACER AJUSTE DE EKR Y HACER UPDATE DE RECORD
 def post_session(body: dict):
     validator = cerberus.Validator(session_schemas.POST_SESSION_SCHEMA)
+    validator.allow_unknown = True
+
     logging.warning("Received a POST request")
 
     if validator.validate(body):
@@ -169,7 +169,8 @@ def post_session(body: dict):
                 session_date,
                 motive,
                 recovery_fee,
-                record_id 
+                record_id, 
+                service_type
             ) VALUES (
                 %(tool)s,
                 %(intervention_type)s,
@@ -182,8 +183,16 @@ def post_session(body: dict):
                 %(session_date)s,
                 %(motive)s,
                 %(recovery_fee)s,
-                %(record_id)s
-            )"""
+                %(record_id)s, 
+                %(service_type)s
+            ); 
+            UPDATE 
+                cetac_record 
+            SET 
+                is_open = %(is_open)s
+            WHERE
+                id = %(record_id)s
+        """
 
         _, query_status_code = db_conn.execute_query(query, body)
 

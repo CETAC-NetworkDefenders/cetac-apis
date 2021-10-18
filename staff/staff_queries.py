@@ -89,13 +89,43 @@ class StaffQueries(Enum):
 
 	get_intervention_type_report = """
 		SELECT
-			intervention_type,
-			COUNT(intervention_type) AS total
+			intervention_type AS name,
+			COUNT(intervention_type) AS val
 		FROM
 			cetac_session
+		WHERE
+			session_date <= CURRENT_DATE AND 
+			session_date >= %(timespan)s
 		GROUP BY
 			intervention_type
 	"""
+
+	get_service_type_report = """
+		SELECT
+			service_type AS name,
+			COUNT(service_type) AS val
+		FROM
+			cetac_session
+		WHERE
+			session_date <= CURRENT_DATE AND 
+			session_date >= %(timespan)s
+		GROUP BY
+			service_type
+	"""
+
+	get_motive_report = """
+		SELECT
+			motive AS name,
+			COUNT(motive) AS val
+		FROM
+			cetac_session
+		WHERE
+			session_date <= CURRENT_DATE AND 
+			session_date >= %(timespan)s
+		GROUP BY
+			motive
+	"""
+
 
 	get_users_report = """
 		SELECT

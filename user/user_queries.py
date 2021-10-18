@@ -1,7 +1,8 @@
 from enum import Enum
 
+
 class UserQueries(Enum):
-    get_user = """
+	get_user = """
     SELECT
         cetac_user.*, 
         cetac_record.id as record_id
@@ -14,8 +15,7 @@ class UserQueries(Enum):
         cetac_user.id = %(user_id)s
     """
 
-
-    create_user = """
+	create_user = """
         WITH inserted_user AS (
             INSERT INTO cetac_user(
                 first_lastname,
@@ -61,7 +61,7 @@ class UserQueries(Enum):
         )
     """
 
-    update_user = """
+	update_user = """
     UPDATE
         cetac_user
     SET
@@ -83,16 +83,24 @@ class UserQueries(Enum):
         id = %(id)s
     """
 
-    get_user_listing = """
+	get_user_listing = """
 		SELECT 
+			id, 
+			cetac_record.id AS record_id, 
 			first_lastname,
 			second_lastname,
 			firstname
 		FROM 
 			cetac_user
-	""" 
+		INNER JOIN 
+			cetac_record
+		ON 	
+			cetac_record.user_id = cetac_user.id
+		WHERE 
+			cetac_record.is_open = FALSE
+	"""
 
-    get_user_listing_by_staff_id = """
+	get_user_listing_by_staff_id = """
         SELECT DISTINCT
             user_id,
             cetac_record.id AS record_id, 
@@ -105,5 +113,7 @@ class UserQueries(Enum):
             cetac_record 
         ON 
             cetac_user.id = cetac_record.user_id
-        WHERE staff_id = %(staff_id)s;
+        WHERE 
+            cetac_record.staff_id = %(staff_id)s AND 
+            cetac_record.is_open = TRUE;
     """

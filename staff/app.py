@@ -1,6 +1,7 @@
 import json
 import logging
 from http import HTTPStatus
+from datetime import timedelta, date
 
 import cerberus
 
@@ -26,9 +27,9 @@ def lambda_handler(event, _):
             logging.warning("Listing staff")
             response, status = get_staff_listing(params)
 
-        elif "intervention_type_report" in params.keys():
-            logging.warning("Getting staff intervention type report")
-            response, status = get_intervention_type_report(params)
+        elif "session_report" in params.keys():
+            logging.warning("Getting session type report")
+            response, status = get_session_report(params)
 
         elif "users_report" in params.keys():
             logging.warning("Getting staff users report")
@@ -275,32 +276,63 @@ def patch_staff(params: dict):
     return response, status
 
 
-def get_intervention_type_report(params: dict):
-        """
-        """
+def get_session_report(params: dict):
         validator = cerberus.Validator(staff_schemas.GET_INTERVENTION_TYPE_REPORT_SCHEMA)
 
         if validator.validate(params):
+
+            query_mapping = {
+                'intervention': StaffQueries.get_intervention_type_report.value,
+                'service': StaffQueries.get_service_type_report.value,
+                'motive': StaffQueries.get_motive_report.value
+            }
+
+            timediff_maping = {
+                'week': timedelta(weeks=1),
+                'month': timedelta(weeks=4),
+                'year': timedelta(weeks=52)
+            }
+            key_mapping = {
+                'Herramientas Alternativas': "Alternativas",
+                'Servicios Holisticos': "Holísticos"
+            }
+            basetime = date.today() - timediff_maping[params['timespan']]
+
+            logging.warning(query_mapping[params['session_report']])
+            logging.warning(f"Basetime: {basetime.strftime('%Y-%m-%d')}")
+
             db_conn = DBConnection()
 
             query_response, query_status_code = db_conn.execute_query(
-                query=StaffQueries.get_intervention_type_report.value,
-                params=params
+                query=query_mapping[params['session_report']],
+                params={'timespan': basetime.strftime('%Y-%m-%d')}
             )
 
             if query_status_code == HTTPStatus.OK:
+                logging.warning(f"Raw query result: {query_response}")
+                names = []
+                values = []
+
+                for row in query_response:
+                    names.append(key_mapping.get(row['name'], row['name']))
+                    values.append(row['val'])
+
                 response = {
-                    'report': query_response
+                    'labels': names,
+                    'values': values
                 }
                 status = HTTPStatus.OK
+                logging.warning(f"Processed response: {response}")
 
             else:
+                logging.error("Error in the DB")
                 response = {
                     'message': "Error while obtaining the data"
                 }
                 status = HTTPStatus.INTERNAL_SERVER_ERROR
 
         else:
+            logging.error(f"Validator Error {validator.errors}")
             response = {
                 'message': "There was an error with the request",
                 'error': validator.errors
