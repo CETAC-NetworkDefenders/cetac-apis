@@ -135,3 +135,45 @@ GET_USERS_REPORT_SCHEMA = {
 		'type': 'string', 'allowed': ['week', 'month', 'year']
 	}
 }
+
+GET_USERS_REPORT_BY_THANATOLOGIST_SCHEMA = {
+	'users_report_by_thanatologist': {
+		'required': True,
+	},
+	'access_level': {
+		'required': True,
+		'type': 'string', 'allowed': ['admin', 'thanatologist', 'admin_support']
+	},
+	'timeframe': {
+		'required': True,
+		'type': 'string', 'allowed': ['week', 'month', 'year']
+	}
+}
+
+GET_RECOVERY_FEES_REPORT_SCHEMA = {
+	'recovery_fees_report': {
+		'required': True,
+	},
+	'access_level': {
+		'required': True,
+		'type': 'string', 'allowed': ['admin', 'thanatologist', 'admin_support']
+	},
+	'timeframe': {
+		'required': True,
+		'type': 'string', 'allowed': ['week', 'month', 'year']
+	}
+}
+
+GET_RECOVERY_FEES_REPORT_BY_THANATOLOGIST_SCHEMA = {
+	'recovery_fees_report_by_thanatologist': {
+		'required': True,
+	},
+	'access_level': {
+		'required': True,
+		'type': 'string', 'allowed': ['admin', 'thanatologist', 'admin_support']
+	},
+	'timeframe': {
+		'required': True,
+		'type': 'string', 'allowed': ['week', 'month', 'year']
+	}
+}
