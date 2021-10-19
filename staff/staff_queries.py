@@ -126,11 +126,10 @@ class StaffQueries(Enum):
 			motive
 	"""
 
-
 	get_users_report = """
 		SELECT
-			gender,
-			count(gender) AS total
+			gender AS name,
+			count(gender) AS val
 		FROM 
 			(
 				SELECT DISTINCT
@@ -142,7 +141,8 @@ class StaffQueries(Enum):
 				ON
 					cetac_session.record_id = cetac_record.id
 				WHERE
-					session_date >= date_trunc(%(timeframe)s, CURRENT_DATE)
+					session_date <= CURRENT_DATE AND 
+					session_date >= %(timespan)s
 			) AS user_id
 		JOIN
 			cetac_user
@@ -154,8 +154,8 @@ class StaffQueries(Enum):
 
 	get_users_report_by_thanatologist = """
 		SELECT 
-			concat(firstname, ' ', first_lastname, ' ', second_lastname) AS thanatologist,
-			count(staff_id) AS total
+			concat(firstname, ' ', first_lastname, ' ', second_lastname) AS name,
+			count(staff_id) AS val
 		FROM 
 			cetac_session
 		JOIN 
@@ -163,7 +163,8 @@ class StaffQueries(Enum):
 		ON
 			cetac_staff.id = cetac_session.staff_id
 		WHERE
-			session_date >= date_trunc(%(timeframe)s, CURRENT_DATE)
+			session_date <= CURRENT_DATE AND 
+			session_date >= %(timespan)s
 		AND
 			staff_id is not null
 		GROUP BY
@@ -172,17 +173,19 @@ class StaffQueries(Enum):
 
 	get_recovery_fees_report = """
 		SELECT
-			SUM (recovery_fee) AS total
+			concat('Ingresos globales ', ' ') AS name,
+			SUM (recovery_fee) AS val
 		FROM
 			cetac_session
 		WHERE
-			session_date >= date_trunc(%(timeframe)s, CURRENT_DATE)
+			session_date <= CURRENT_DATE AND 
+			session_date >= %(timespan)s
 	"""
 
 	get_recovery_fees_report_by_thanatologist = """
 		SELECT
-			concat(firstname, ' ', first_lastname, ' ', second_lastname) AS thanatologist,
-			SUM (recovery_fee) AS total
+			concat(firstname, ' ', first_lastname, ' ', second_lastname) AS name,
+			SUM (recovery_fee) AS val
 		FROM
 			cetac_session
 		JOIN
@@ -190,7 +193,8 @@ class StaffQueries(Enum):
 		ON
 			cetac_staff.id = cetac_session.staff_id
 		WHERE
-			session_date >= date_trunc(%(timeframe)s, CURRENT_DATE)
+			session_date <= CURRENT_DATE AND 
+			session_date >= %(timespan)s
 		AND
 			staff_id is not null
 		GROUP BY

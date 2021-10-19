@@ -35,17 +35,9 @@ def lambda_handler(event, _):
             logging.warning("Getting staff users report")
             response, status = get_users_report(params)
 
-        elif "users_report_by_thanatologist" in params.keys():
-            logging.warning("Getting staff users report by thanatologist")
-            response, status = get_users_report_by_thanatologist(params)
-
         elif "recovery_fees_report" in params.keys():
             logging.warning("Getting staff recovery fees report")
             response, status = get_recovery_fees_report(params)
-
-        elif "recovery_fees_report_by_thanatologist" in params.keys():
-            logging.warning("Getting staff recovery fees report by thanatologist")
-            response, status = get_recovery_fees_report_by_thanatologist(params)
 
         else:
             response, status = get_staff(params)
@@ -348,53 +340,45 @@ def get_users_report(params: dict):
     validator = cerberus.Validator(staff_schemas.GET_USERS_REPORT_SCHEMA)
 
     if validator.validate(params):
-        db_conn = DBConnection()
 
-        query_response, query_status_code = db_conn.execute_query(
-            query=StaffQueries.get_users_report.value,
-            params=params
-        )
-
-        if query_status_code == HTTPStatus.OK:
-            response = {
-                'report': query_response
-            }
-            status = HTTPStatus.OK
-
-        else:
-            response = {
-                'message': "Error while obtaining the data"
-            }
-            status = HTTPStatus.INTERNAL_SERVER_ERROR
-
-    else:
-        response = {
-            'message': "There was an error with the request",
-            'error': validator.errors
+        query_mapping = {
+            'global': StaffQueries.get_users_report.value,
+            'by_thanatologist': StaffQueries.get_users_report_by_thanatologist.value,
         }
-        status = HTTPStatus.BAD_REQUEST
 
-    return response, status
+        timediff_maping = {
+            'week': timedelta(weeks=1),
+            'month': timedelta(weeks=4),
+            'year': timedelta(weeks=52)
+        }
 
+        basetime = date.today() - timediff_maping[params['timespan']]
 
-def get_users_report_by_thanatologist(params: dict):
-    """
-    """
-    validator = cerberus.Validator(staff_schemas.GET_USERS_REPORT_BY_THANATOLOGIST_SCHEMA)
+        logging.warning(query_mapping[params['users_report']])
+        logging.warning(f"Basetime: {basetime.strftime('%Y-%m-%d')}")
 
-    if validator.validate(params):
         db_conn = DBConnection()
 
         query_response, query_status_code = db_conn.execute_query(
-            query=StaffQueries.get_users_report_by_thanatologist.value,
-            params=params
+            query=query_mapping[params['users_report']],
+            params={'timespan': basetime.strftime('%Y-%m-%d')}
         )
 
         if query_status_code == HTTPStatus.OK:
+            logging.warning(f"Raw query result: {query_response}")
+            names = []
+            values = []
+
+            for row in query_response:
+                names.append(row['name'])
+                values.append(row['val'])
+
             response = {
-                'report': query_response
+                'labels': names,
+                'values': values
             }
             status = HTTPStatus.OK
+            logging.warning(f"Processed response: {response}")
 
         else:
             response = {
@@ -418,53 +402,46 @@ def get_recovery_fees_report(params: dict):
     validator = cerberus.Validator(staff_schemas.GET_RECOVERY_FEES_REPORT_SCHEMA)
 
     if validator.validate(params):
-        db_conn = DBConnection()
 
-        query_response, query_status_code = db_conn.execute_query(
-            query=StaffQueries.get_recovery_fees_report.value,
-            params=params
-        )
-
-        if query_status_code == HTTPStatus.OK:
-            response = {
-                'report': query_response
-            }
-            status = HTTPStatus.OK
-
-        else:
-            response = {
-                'message': "Error while obtaining the data"
-            }
-            status = HTTPStatus.INTERNAL_SERVER_ERROR
-
-    else:
-        response = {
-            'message': "There was an error with the request",
-            'error': validator.errors
+        query_mapping = {
+            'global': StaffQueries.get_recovery_fees_report.value,
+            'by_thanatologist': StaffQueries.get_recovery_fees_report_by_thanatologist.value,
         }
-        status = HTTPStatus.BAD_REQUEST
 
-    return response, status
+        timediff_maping = {
+            'week': timedelta(weeks=1),
+            'month': timedelta(weeks=4),
+            'year': timedelta(weeks=52)
+        }
 
+        basetime = date.today() - timediff_maping[params['timespan']]
 
-def get_recovery_fees_report_by_thanatologist(params: dict):
-    """
-    """
-    validator = cerberus.Validator(staff_schemas.GET_RECOVERY_FEES_REPORT_BY_THANATOLOGIST_SCHEMA)
+        logging.warning(query_mapping[params['recovery_fees_report']])
+        logging.warning(f"Basetime: {basetime.strftime('%Y-%m-%d')}")
 
-    if validator.validate(params):
         db_conn = DBConnection()
 
         query_response, query_status_code = db_conn.execute_query(
-            query=StaffQueries.get_recovery_fees_report_by_thanatologist.value,
-            params=params
+            query=query_mapping[params['recovery_fees_report']],
+            params={'timespan': basetime.strftime('%Y-%m-%d')}
         )
 
         if query_status_code == HTTPStatus.OK:
+            logging.warning(f"Raw query result: {query_response}")
+            names = []
+            values = []
+
+            for row in query_response:
+                names.append(row['name'])
+                values.append(row['val'])
+
             response = {
-                'report': query_response
+                'labels': names,
+                'values': values
             }
+
             status = HTTPStatus.OK
+            logging.warning(f"Processed response: {response}")
 
         else:
             response = {
