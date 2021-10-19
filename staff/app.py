@@ -294,7 +294,8 @@ def get_session_report(params: dict):
             }
             key_mapping = {
                 'Herramientas Alternativas': "Alternativas",
-                'Servicios Holisticos': "Holísticos"
+                'Servicios Holisticos': "Holísticos",
+                'Servicios Acompañamiento': "Acompañamiento"
             }
             basetime = date.today() - timediff_maping[params['timespan']]
 
