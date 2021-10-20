@@ -126,6 +126,12 @@ Resources:
             Path: /user
             Method: patch
             RestApiId: !Ref CetacApi
+        ChangeUserStatus:
+          Type: Api
+          Properties:
+            Path: /user
+            Method: put
+            RestApiId: !Ref CetacApi
 
   SessionFunction:
     Type: AWS::Serverless::Function
