@@ -184,7 +184,7 @@ class StaffQueries(Enum):
 
 	get_recovery_fees_report_by_thanatologist = """
 		SELECT
-			concat(firstname, ' ', first_lastname, ' ', second_lastname) AS name,
+			concat(firstname, ' ', first_lastname) AS name,
 			SUM (recovery_fee) AS val
 		FROM
 			cetac_session

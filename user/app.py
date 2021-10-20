@@ -26,7 +26,7 @@ def lambda_handler(event, _):
         else:
             response, status = get_user(params)
 
-    if method == "PUT":
+    elif method == "PUT":
         response, status = update_record(params)
 
     elif body:

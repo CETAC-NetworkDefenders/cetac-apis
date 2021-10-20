@@ -1,7 +1,5 @@
 from enum import Enum
 
-from user.app import update_record
-
 
 class UserQueries(Enum):
     get_user = """
