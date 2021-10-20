@@ -141,3 +141,12 @@ PATCH_USER_SCHEMA = {
         'type': 'string'
     },
 }
+
+UPDATE_RECORD_SCHEMA = {
+    'staff_id': {
+        'required': True,
+    },
+    'record_id': {
+        'required': True,
+    }
+}

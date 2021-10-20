@@ -26,6 +26,9 @@ def lambda_handler(event, _):
         else:
             response, status = get_user(params)
 
+    if method == "PUT":
+        response, status = update_record(params)
+
     elif body:
         body = json.loads(body)
         logging.warning(f"Loaded JSON: {body}")
@@ -261,3 +264,40 @@ def patch_user(body: dict):
 
     return response, status
 
+
+def update_record(params: dict):
+    """
+    Update the record of a user.
+    :param params: Dictionary with query parameters.
+    :return:
+    """
+    validator = cerberus.Validator(user_schemas.UPDATE_RECORD_SCHEMA)
+
+    if validator.validate(params):
+        db_conn = DBConnection()
+
+        query_response, query_status_code = db_conn.execute_query(
+            query=UserQueries.update_record.value,
+            params=params
+        )
+
+        if query_status_code == HTTPStatus.OK:
+            response = {
+                'message': "Successfully updated the record"
+            }
+            status = HTTPStatus.OK
+
+        else:
+            response = {
+                'message': "Error while updating the record"
+            }
+            status = HTTPStatus.INTERNAL_SERVER_ERROR
+
+    else:
+        response = {
+            'message': "There was an error with the request",
+            'error': validator.errors
+        }
+        status = HTTPStatus.BAD_REQUEST
+
+    return response, status
